@@ -36,7 +36,7 @@ public class KafkaIntegrationTest {
         value.put("city", "lexington");
         value.put("state", "ma");
 
-        new KafkaProducerClient().produce(topic, schema, value);
+        new KafkaProducerClient(topic).produce(schema, value);
         List<GenericRecord> genericRecords = new KafkaConsumerClient(topic).consumeUpto(value);
         assertEquals(addressLine1, genericRecords.get(genericRecords.size() - 1).get("address").toString());
     }

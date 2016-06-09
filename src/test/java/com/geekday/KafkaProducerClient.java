@@ -21,6 +21,12 @@ import java.util.Properties;
 
 public class KafkaProducerClient {
 
+    private String topic;
+
+    public KafkaProducerClient(String topic) {
+        this.topic = topic;
+    }
+
     void createTopic(String topic) {
         String zookeeperConnect = "192.168.33.10:2181";
         int sessionTimeoutMs = 10 * 1000;
@@ -51,7 +57,7 @@ public class KafkaProducerClient {
         zkClient.close();
     }
 
-    void produce(String topic, Schema schema, GenericData.Record value) throws IOException {
+    void produce(Schema schema, GenericData.Record value) throws IOException {
         createTopic(topic);
 
         Properties props = new Properties();
