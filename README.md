@@ -1,5 +1,6 @@
 # geek-day
-This is vagrant setup which can help running confluent platform latest release confluent-3.0.0-2.11 with latest kafka kafka_2.11:0.10.0.0-cp1 which supports kafka streams. The repo also has an integration test with utilities to create topic, publish messages on topic and consume them.
+This is vagrant setup which can help running confluent platform latest release confluent-3.0.0-2.11 with latest kafka kafka_2.11:0.10.0.0-cp1 with supports for kafka streams. The ansible setup can be extended to add additional packages required for your project. (e.g. adding postgresql etc..). 
+The repo also has an integration test with utilities to create topic, publish messages on topic and consume them.
 
 ## Setup instructions
 
