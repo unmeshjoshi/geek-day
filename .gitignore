@@ -1,0 +1,8 @@
+build
+*.iml
+.gradle
+.idea
+.vagrant
+logs
+*.log
+1

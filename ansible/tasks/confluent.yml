@@ -1,0 +1,14 @@
+- name: Check if confluent installed
+  stat: path=/opt/confluent-3.0.0/
+  register: confluent_installed
+
+- name: Get confluent
+  command: curl -o /tmp/confluent-3.0.0-2.11.tar.gz  http://packages.confluent.io/archive/3.0/confluent-3.0.0-2.11.tar.gz
+  when: confluent_installed.stat.exists == False
+
+- name: Explode confluent tar
+  unarchive: src=/tmp/confluent-3.0.0-2.11.tar.gz dest=/opt copy=no
+  when: confluent_installed.stat.exists == False
+
+- name: give permissions on confluent directory
+  file: path=/opt/confluent-3.0.0 state=touch mode=777

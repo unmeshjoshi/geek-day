@@ -1,0 +1,76 @@
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'maven'
+
+buildscript {
+    repositories {
+        mavenCentral()
+        mavenLocal()
+        maven {
+            url 'http://packages.confluent.io/maven/'
+        }
+    }
+    dependencies {
+        classpath "io.spring.gradle:dependency-management-plugin:0.5.4.RELEASE"
+    }
+}
+
+apply plugin: "io.spring.dependency-management"
+
+dependencyManagement {
+    imports {
+        mavenBom 'com.amazonaws:aws-java-sdk-bom:1.10.47'
+    }
+}
+
+repositories {
+    maven {
+        url 'http://packages.confluent.io/maven/'
+    }
+    mavenCentral()
+    mavenLocal()
+}
+
+dependencies {
+    compile "org.apache.kafka:connect-api:0.10.0.0-cp1"
+    compile "org.apache.kafka:kafka_2.11:0.10.0.0-cp1"
+    compile "org.apache.kafka:kafka-streams:0.10.0.0-cp1"
+    compile "org.slf4j:slf4j-api:1.7.6"
+    compile "org.apache.avro:avro:1.7.7"
+    compile 'com.amazonaws:aws-java-sdk-s3:1.10.8'
+    compile 'io.confluent:kafka-connect-avro-converter:3.0.0'
+    compile 'io.confluent:kafka-schema-registry:3.0.0'
+
+    testCompile "junit:junit:4.11"
+    testCompile "org.easymock:easymock:3.3.1"
+    testCompile "org.powermock:powermock-module-junit4:1.6.2"
+    testCompile "org.powermock:powermock-api-easymock:1.6.2"
+    testRuntime "org.slf4j:slf4j-log4j12:1.7.6"
+}
+
+task fatJar(type: Jar) {
+    baseName = project.name + '-all'
+    from { configurations.compile.filter( {! (it.name =~ /.*.kafka.*\.jar/ )}).collect { it.isDirectory() ? it : zipTree(it) }}
+    with jar
+}
+
+task testJar(type: Jar) {
+    classifier = 'test'
+    from sourceSets.test.output
+}
+
+test {
+    testLogging {
+        events "passed", "skipped", "failed"
+        exceptionFormat = 'full'
+    }
+}
+
+artifacts {
+    archives testJar
+}
+
+configurations {
+    archives.extendsFrom(testCompile)
+}
+

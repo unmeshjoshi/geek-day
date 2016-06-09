@@ -1,0 +1,8 @@
+- hosts: all
+  sudo: yes
+  tasks:
+    - include: tasks/jdk.yml
+    - include: tasks/confluent.yml
+    - include: tasks/docker.yml
+
+

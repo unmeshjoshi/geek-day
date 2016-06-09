@@ -1,0 +1,14 @@
+- name: ensure pgdg.list file exists
+  copy:
+    content: "deb https://apt.dockerproject.org/repo ubuntu-trusty main"
+    dest: /etc/apt/sources.list.d/docker.list
+    force: no
+    group: sys
+    owner: root
+    mode: 0555
+
+- apt: name=apparmor update-cache=yes 
+
+- apt: name=linux-image-extra-3.13.0-85-generic
+
+- apt: name=docker-engine force=yes
