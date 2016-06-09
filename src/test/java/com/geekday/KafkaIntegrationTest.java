@@ -1,4 +1,4 @@
-package com.cdc.s3.connect;
+package com.geekday;
 
 
 import org.apache.avro.Schema;

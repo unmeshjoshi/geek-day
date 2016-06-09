@@ -1,4 +1,4 @@
-package com.cdc.s3.connect;
+package com.geekday;
 
 
 import kafka.admin.AdminUtils;
@@ -7,20 +7,17 @@ import kafka.utils.ZkUtils;
 import org.I0Itec.zkclient.ZkClient;
 import org.I0Itec.zkclient.ZkConnection;
 import org.apache.avro.Schema;
-import org.apache.avro.SchemaBuilder;
 import org.apache.avro.file.DataFileWriter;
 import org.apache.avro.generic.GenericData;
 import org.apache.avro.generic.GenericDatumWriter;
 import org.apache.avro.generic.GenericRecord;
 import org.apache.avro.io.DatumWriter;
-import org.apache.commons.codec.DecoderException;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import scala.collection.Seq;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Properties;
-import java.util.Random;
 
 public class KafkaProducerClient {
 
