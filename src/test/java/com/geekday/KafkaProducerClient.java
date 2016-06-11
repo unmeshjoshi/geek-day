@@ -22,13 +22,16 @@ import java.util.Properties;
 public class KafkaProducerClient {
 
     private String topic;
+    private String bootStrapServers;
+    private String zookeeperConnect;
 
-    public KafkaProducerClient(String topic) {
+    public KafkaProducerClient(String topic, String bootStrapServers, String zookeeperConnect) {
         this.topic = topic;
+        this.bootStrapServers = bootStrapServers;
+        this.zookeeperConnect = zookeeperConnect;
     }
 
     void createTopic(String topic) {
-        String zookeeperConnect = "192.168.33.10:2181";
         int sessionTimeoutMs = 10 * 1000;
         int connectionTimeoutMs = 8 * 1000;
         // Note: You must initialize the ZkClient with ZKStringSerializer.  If you don't, then
@@ -61,7 +64,7 @@ public class KafkaProducerClient {
         createTopic(topic);
 
         Properties props = new Properties();
-        props.put("bootstrap.servers", "192.168.33.10:9092");
+        props.put("bootstrap.servers", bootStrapServers);
         props.put("key.serializer", "org.apache.kafka.common.serialization.ByteArraySerializer");
         props.put("value.serializer", "org.apache.kafka.common.serialization.ByteArraySerializer");
         props.put("request.required.acks", "1");

@@ -22,9 +22,11 @@ public class KafkaConsumerClient {
 
 
     private String topic;
+    private String bootstrapServers;
 
-    public KafkaConsumerClient(String topic) {
+    public KafkaConsumerClient(String topic, String bootstrapServers) {
         this.topic = topic;
+        this.bootstrapServers = bootstrapServers;
     }
 
     List<GenericRecord> consumeUpto(GenericData.Record latestPublishedLocation) throws IOException {
@@ -67,7 +69,7 @@ public class KafkaConsumerClient {
 
     private HashMap<String, Object> consumerConfigs() {
         HashMap<String, Object> configs = new HashMap<>();
-        configs.put("bootstrap.servers", "192.168.33.10:9092");
+        configs.put("bootstrap.servers", bootstrapServers);
         configs.put("key.serializer", "org.apache.kafka.common.serialization.ByteArraySerializer");
         configs.put("key.serializer", "org.apache.kafka.common.serialization.ByteArraySerializer");
         configs.put("key.deserializer", "org.apache.kafka.common.serialization.ByteArrayDeserializer");

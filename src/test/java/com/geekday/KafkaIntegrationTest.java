@@ -16,9 +16,13 @@ import static org.junit.Assert.assertEquals;
 public class KafkaIntegrationTest {
 
     private final String topic = "location";
+    
+    private String bootStrapServers = "192.168.33.10:9092";
+    private String zookeeperConnect = "192.168.33.10:2181";
 
     @Test
     public void shouldProduceAndConsumeMessagesOnKafka() throws IOException, InterruptedException {
+
         Schema schema = SchemaBuilder
                 .record("address")
                 .fields()
@@ -36,8 +40,10 @@ public class KafkaIntegrationTest {
         value.put("city", "lexington");
         value.put("state", "ma");
 
-        new KafkaProducerClient(topic).produce(schema, value);
-        List<GenericRecord> genericRecords = new KafkaConsumerClient(topic).consumeUpto(value);
+
+        new KafkaProducerClient(topic, bootStrapServers, zookeeperConnect).produce(schema, value);
+
+        List<GenericRecord> genericRecords = new KafkaConsumerClient(topic, bootStrapServers).consumeUpto(value);
         assertEquals(addressLine1, genericRecords.get(genericRecords.size() - 1).get("address").toString());
     }
 }
