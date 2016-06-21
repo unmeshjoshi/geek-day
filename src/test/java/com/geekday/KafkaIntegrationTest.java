@@ -16,7 +16,7 @@ import static org.junit.Assert.assertEquals;
 public class KafkaIntegrationTest {
 
     private final String topic = "location";
-    
+
     private String bootStrapServers = "192.168.33.10:9092";
     private String zookeeperConnect = "192.168.33.10:2181";
 
