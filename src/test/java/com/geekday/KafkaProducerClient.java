@@ -82,7 +82,7 @@ public class KafkaProducerClient {
 
         System.out.println("Producing message " + value);
 
-        ProducerRecord<byte[], byte[]> message = new ProducerRecord<byte[], byte[]>(topic, null, "test".getBytes(), serializedBytes);
+        ProducerRecord<byte[], byte[]> message = new ProducerRecord<byte[], byte[]>(topic, "test".getBytes(), serializedBytes);
         producer.send(message);
         producer.close();
 

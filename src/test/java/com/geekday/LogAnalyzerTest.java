@@ -47,7 +47,7 @@ public class LogAnalyzerTest {
         String[] regions = new String[]{"USA", "UK", "Asia", "Australia"};
         String[] locations = new String[]{"Goa", "Pune", "Mumbai"};
 
-        new Thread(new Runnable()  {
+        new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
@@ -85,33 +85,37 @@ public class LogAnalyzerTest {
         streamsConfiguration.put(StreamsConfig.VALUE_SERDE_CLASS_CONFIG, Serdes.ByteArray().getClass().getName());
         streamsConfiguration.put(StreamsConfig.TIMESTAMP_EXTRACTOR_CLASS_CONFIG, WallclockTimestampExtractor.class.getName());
 
-        KStreamBuilder builder = new KStreamBuilder();
+        KStreamBuilder builder = buildStreamProcessingPipeline();
 
-        KStream<byte[], byte[]> locationViews = builder.stream(Serdes.ByteArray(), Serdes.ByteArray(), topic);
-
-        printViewsPerRegionLocation(locationViews);
 
         KafkaStreams streams = new KafkaStreams(builder, streamsConfiguration);
         streams.start();
     }
 
-    private static void printViewsPerRegionLocation(KStream<byte[], byte[]> locationViews) {
-//        KTable<String, Integer> aggregated = locationViews
+    private static KStreamBuilder buildStreamProcessingPipeline() {
+        KStreamBuilder builder = new KStreamBuilder();
+
+        KStream<byte[], byte[]> locationViews = builder.stream(Serdes.ByteArray(), Serdes.ByteArray(), topic);
+
+//        KTable<String, Integer> aggregation = locationViews
 //                .map((key, value) -> {
 //                    GenericRecord parsedRecord = parse(value);
 //                    String parsedKey = parsedRecord.get("region").toString() + parsedRecord.get("location").toString();
 //                    return new KeyValue<>(parsedKey, 1);
 //                }).reduceByKey((v1, v2) -> v1 + v2, Serdes.String(), Serdes.Integer(), "aggregated");
+//
+//        aggregation.foreach((k, v) -> System.out.println(k + ", " + v));
 
-
-        KTable<Windowed<String>, Integer> aggregated = locationViews
+        KTable<Windowed<String>, Integer> windowedAggregation = locationViews
                 .map((key, value) -> {
                     GenericRecord parsedRecord = parse(value);
                     String parsedKey = parsedRecord.get("region").toString() + parsedRecord.get("location").toString();
                     return new KeyValue<>(parsedKey, 1);
                 }).reduceByKey((v1, v2) -> v1 + v2, TimeWindows.of("aggregated", 100000), Serdes.String(), Serdes.Integer());
 
-        aggregated.foreach((k, v) -> System.out.println(k + ", " + v));
+        windowedAggregation.foreach((k, v) -> System.out.println(k + ", " + v));
+
+        return builder;
     }
 
     private static GenericRecord parse(byte[] value) {
@@ -122,7 +126,7 @@ public class LogAnalyzerTest {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        return (GenericRecord)reader.next();
+        return (GenericRecord) reader.next();
     }
 
 }
